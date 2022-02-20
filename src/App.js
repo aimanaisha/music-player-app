@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 function App() {
 
-  const [cover, setCover]=useState('../img/music.jpg')
+  const [cover, setCover]=useState("/music.jpg")
   const [audio, setAudio]=useState('')
   const [title, setTitle]=useState('Song Title')
   const [album, setAlbum]=useState('')
@@ -24,13 +24,13 @@ function App() {
       'x-rapidapi-key': 'e474fd8a9cmshd9d491e4a0688afp1e2253jsnb4f5557fe505'
   } }
   
-  axios.request(options).then(function ( ponse) {      
-      setCover( ponse.data.data[0].album.cover_big)
-      setAudio( ponse.data.data[0].preview)
-      setTitle( ponse.data.data[0].title)
-      setArtist( ponse.data.data[0].artist.name)
-      setImage( ponse.data.data[0].artist.picture_medium)
-      setAlbum("Album: "+ ponse.data.data[0].album.title) 
+  axios.request(options).then(function (response) {      
+      setCover(response.data.data[0].album.cover_big)
+      setAudio(response.data.data[0].preview)
+      setTitle(response.data.data[0].title)
+      setArtist(response.data.data[0].artist.name)
+      setImage(response.data.data[0].artist.picture_medium)
+      setAlbum("Album: "+response.data.data[0].album.title) 
     })
     .catch(function (error) {
 	    console.error(error);
@@ -38,7 +38,7 @@ function App() {
   }
 
   const addData= async ()=>{
-    console.log( title,  artist)
+    if(artist!==""){
     const res = await fetch('https://music-player-ee74b-default-rtdb.firebaseio.com/songData.json',
       {
         method: "POST",
@@ -46,16 +46,13 @@ function App() {
           "Content-Type": "application/json",
         },
         body:JSON.stringify({ title, album, artist,})
-      }
-    )  
-    if(res){
-      alert("Data Stored")
-    } else{
-      alert("Field is Empty")
-    }
+      }  
+    )     
+      alert("Data Stored")     
+  }else{
+    alert("Field is Empty")
   }
-  
-  
+}
   return (
     <div className="body1 h-full pb-14">
       <Form ondataHandler={dataHandler} addData={addData}/>
