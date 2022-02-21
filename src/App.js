@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import Form from './Form' 
 import Display from './Display';
-import { useState } from 'react';
+
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
         body:JSON.stringify({ title, album, artist,})
       }  
     )     
-      alert("Data Stored")     
+      alert("Data is Stored")     
   }else{
     alert("Field is Empty")
   }
