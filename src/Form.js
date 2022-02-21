@@ -19,7 +19,7 @@ const Form =(props)=>{
 
                 <div className="flex rounded-md w-1/3 mr-4 px-4 text-xl tracking-wider text-[#6cbfe1] transition focus:outline-none bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#6cbfe1]">
 
-                    <input className="text-[#6cbfe1] bg-transparent w-full h-14 focus:outline-none" type="text" placeholder="Search for a song or an artist" onChange={changeHandler} value={value} spellCheck='false'/>
+                    <input className="text-[#6cbfe1] bg-transparent w-full h-14 focus:outline-none" type="text" placeholder="Search for a Song or an Artist" onChange={changeHandler} value={value} spellCheck='false'/>
 
                     <button>                   
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-[#6cbfe1]" fill="none" viewBox="0 0 24 24"   stroke="currentColor">

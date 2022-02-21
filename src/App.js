@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios';
 import Form from './Form' 
 import Display from './Display';
-
+import Card from './Card';
 
 function App() {
 
@@ -25,7 +25,8 @@ function App() {
       'x-rapidapi-key': 'e474fd8a9cmshd9d491e4a0688afp1e2253jsnb4f5557fe505'
   } }
   
-  axios.request(options).then(function (response) {      
+  axios.request(options)
+    .then((response)=> {      
       setCover(response.data.data[0].album.cover_big)
       setAudio(response.data.data[0].preview)
       setTitle(response.data.data[0].title)
@@ -37,10 +38,11 @@ function App() {
 	    console.error(error);
     });    
   }
-
+  
   const addData= async ()=>{
+
     if(artist!==""){
-    const res = await fetch('https://music-player-ee74b-default-rtdb.firebaseio.com/songData.json',
+     await fetch('https://music-player-ee74b-default-rtdb.firebaseio.com/songData.json',
       {
         method: "POST",
         headers: {
@@ -58,8 +60,8 @@ function App() {
     <div className="body1 h-full pb-14">
       <Form ondataHandler={dataHandler} addData={addData}/>
       <Display songtitle={title} artist={artist} album={album} cover={cover} image={image} audio={audio}/>
+      <Card/>
     </div>
   );
 }
-
 export default App;
