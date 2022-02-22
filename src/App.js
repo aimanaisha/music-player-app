@@ -27,10 +27,9 @@ function App() {
   const auth = getAuth(app);
   const db = getFirestore();
  
- const signInWithGoogle = () => {
+  const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
-  signInWithPopup(auth, provider);
- 
+    signInWithPopup(auth, provider);
   }
   const [user] = useAuthState(auth);
  
@@ -43,18 +42,16 @@ function App() {
   const [data, setData]=useState([])
   const [userFav, setUserFav] = useState([]);
  
-  const dataHandler=(query)=>{            
- 
-  const options = {
+  const dataHandler=(query)=>{             
+    const options = {
     method: 'GET',
     url: 'https://deezerdevs-deezer.p.rapidapi.com/search',
     params: {q: query},
     headers: {
       'x-rapidapi-host': 'deezerdevs-deezer.p.rapidapi.com',
       'x-rapidapi-key': 'e474fd8a9cmshd9d491e4a0688afp1e2253jsnb4f5557fe505'
-  } }
- 
-  axios.request(options)
+    } } 
+    axios.request(options)
     .then((response)=> {      
       setCover(response.data.data[0].album.cover_big)
       setAudio(response.data.data[0].preview)
@@ -74,8 +71,7 @@ function App() {
     });    
   }  
  
-const addData=async()=>{
- 
+const addData=async()=>{ 
   if(artist!=='' ){
     try {
        await addDoc(collection(db, 'users'), {
@@ -92,15 +88,8 @@ const addData=async()=>{
   }else{
     alert('Empty Field')
   }
-  await queryData()
-  setUserFav(data.filter((e) => e.uid === user.uid))
-  //setData(arr)
-}
- 
-const queryData = async () => {
   setData([])
   const querySnapshot = await getDocs(collection(db, "users"));
-  // console.log(user.uid);
   querySnapshot.forEach((doc) => {
     try{
       setData(prev => [...prev,doc.data()])
@@ -108,15 +97,16 @@ const queryData = async () => {
       console.log("Error", e);
     }
   })
- 
+  setUserFav(data.filter((e) => e.uid === user.uid))
 }
- 
+const locreload=()=>{window.location.reload()}  
 console.log(userFav)
  
  
   const SignOut=()=>{
     return auth.currentUser && (
-      <button className="sign-out rounded-md px-6 m-2 text-xl py-2 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#ff9a59] text-[#ff9a59]" onClick={() => auth.signOut()}>Sign Out</button>
+      <button className="sign-out rounded-md px-6 m-2 text-xl py-2 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#ff9a59] text-[#ff9a59]" onClick={() => {auth.signOut()
+      locreload()}}>Sign Out</button>
     )
   }
  
@@ -141,7 +131,6 @@ console.log(userFav)
           </div>)} 
             </>
           )})}
-          
  
       </div>
  
