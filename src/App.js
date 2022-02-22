@@ -1,11 +1,38 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 import axios from 'axios';
 import Form from './Form' 
 import Display from './Display';
 import Card from './Card';
+import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { collection,addDoc,} from "firebase/firestore"; 
 
 function App() {
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBAZa6vZaAsVT4CCaqGwpHkKajIHSL9Igs",
+    authDomain: "music-player-ee74b.firebaseapp.com",
+    databaseURL: "https://music-player-ee74b-default-rtdb.firebaseio.com",
+    projectId: "music-player-ee74b",
+    storageBucket: "music-player-ee74b.appspot.com",
+    messagingSenderId: "679306818706",
+    appId: "1:679306818706:web:dabc50d3447ee1065fe24b",
+    measurementId: "G-2K56Z10BQ4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore();
+
+ const signInWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider);
+  
+  }
+  const [user] = useAuthState(auth);
 
   const [cover, setCover]=useState("/music.jpg")
   const [audio, setAudio]=useState('')
@@ -34,33 +61,50 @@ function App() {
       setImage(response.data.data[0].artist.picture_medium)
       setAlbum("Album: "+response.data.data[0].album.title) 
     })
-    .catch(function (error) {
+    .catch((error)=> {
 	    console.error(error);
+      setCover("/music.jpg")
+      setAudio('')
+      setTitle('Song Title')
+      setArtist('')
+      setImage('')
+      setAlbum('')
     });    
-  }
+  }  
+    
+const addData=async()=>{
   
-  const addData= async ()=>{
-
-    if(artist!==""){
-     await fetch('https://music-player-ee74b-default-rtdb.firebaseio.com/songData.json',
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body:JSON.stringify({ title, album, artist,})
-      }  
-    )     
-      alert("Data is Stored")     
-  }else{
-    alert("Field is Empty")
+  try {
+    const docRef = await addDoc(collection(db, 'users',), {
+      uid:user.uid,
+      title: title,
+      artist: artist,
+      album: album,
+    });
+  } catch (e) {
+    console.error("Error adding document: ", e);
   }
 }
+
+  function SignOut() {
+    return auth.currentUser && (
+      <button className="sign-out rounded-md px-6 m-2 text-xl py-2 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#ff9a59] text-[#ff9a59]" onClick={() => auth.signOut()}>Sign Out</button>
+    )
+  }
+
   return (
+    <div>
+     {user ? 
     <div className="body1 h-full pb-14">
+      <SignOut />
       <Form ondataHandler={dataHandler} addData={addData}/>
       <Display songtitle={title} artist={artist} album={album} cover={cover} image={image} audio={audio}/>
-      <Card/>
+      {/* <Card songtitle={title} artist={artist} audio={audio}/> */}
+      </div> :
+
+      <div className='flex justify-center items-center h-screen'> <button onClick={signInWithGoogle} className='text-4xl text-gray-800 border border-gray-800 px-6 py-3 rounded-md'>Sign In With Google</button> </div>
+      }
+    
     </div>
   );
 }

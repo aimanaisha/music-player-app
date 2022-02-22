@@ -10,6 +10,7 @@ const Form =(props)=>{
     const submitHandler=(e)=>{
         e.preventDefault();
         props.ondataHandler(value)
+        setValue('')
     }
 
       return(
