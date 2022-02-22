@@ -8,7 +8,7 @@ import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { collection,addDoc,} from "firebase/firestore"; 
+import { collection,addDoc,getDocs} from "firebase/firestore"; 
 
 function App() {
 
@@ -40,6 +40,8 @@ function App() {
   const [album, setAlbum]=useState('')
   const [artist, setArtist]=useState('')
   const [image, setImage]=useState('')
+  const [data, setData]=useState('')
+  const [query, setQuery]=useState('')
 
   const dataHandler=(query)=>{            
     
@@ -73,9 +75,10 @@ function App() {
   }  
     
 const addData=async()=>{
+ // console.log(user.uid)
   
   try {
-    const docRef = await addDoc(collection(db, 'users',), {
+    const docRef = await addDoc(collection(db, 'users'), {
       uid:user.uid,
       title: title,
       artist: artist,
@@ -84,9 +87,18 @@ const addData=async()=>{
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+
+  const querySnapshot = await getDocs(collection(db, "users"));
+  querySnapshot.map((doc) => {
+  if(doc.data().uid===user.uid){
+    console.log(doc.data().title)
+    setQuery(doc.data().title)
+    //return(<div className='bg-yellow-200'>{data}</div>)
+  };
+});
 }
 
-  function SignOut() {
+  const SignOut=()=>{
     return auth.currentUser && (
       <button className="sign-out rounded-md px-6 m-2 text-xl py-2 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#ff9a59] text-[#ff9a59]" onClick={() => auth.signOut()}>Sign Out</button>
     )
@@ -100,6 +112,8 @@ const addData=async()=>{
       <Form ondataHandler={dataHandler} addData={addData}/>
       <Display songtitle={title} artist={artist} album={album} cover={cover} image={image} audio={audio}/>
       {/* <Card songtitle={title} artist={artist} audio={audio}/> */}
+      {query.map((g)=>{<div>g</div>})}
+      <div className='bg-yellow-200'>{data}</div>
       </div> :
 
       <div className='flex justify-center items-center h-screen'> <button onClick={signInWithGoogle} className='text-4xl text-gray-800 border border-gray-800 px-6 py-3 rounded-md'>Sign In With Google</button> </div>
