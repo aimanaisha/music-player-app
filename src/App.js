@@ -3,7 +3,6 @@ import './App.css';
 import axios from 'axios';
 import Form from './Form' 
 import Display from './Display';
-import Card from './Card';
 import { getFirestore } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
@@ -41,8 +40,7 @@ function App() {
   const [artist, setArtist]=useState('')
   const [image, setImage]=useState('')
   const [data, setData]=useState([])
-  const [query, setQuery]=useState([])
-  const arr=[]
+ 
   const dataHandler=(query)=>{            
     
   const options = {
@@ -75,10 +73,10 @@ function App() {
   }  
     
 const addData=async()=>{
- // console.log(user.uid)
+
   
   try {
-    const docRef = await addDoc(collection(db, 'users'), {
+     await addDoc(collection(db, 'users'), {
       uid:user.uid,
       title: title,
       artist: artist,
@@ -89,19 +87,14 @@ const addData=async()=>{
   }
 
   const querySnapshot = await getDocs(collection(db, "users"));
+  
   querySnapshot.forEach((doc) => {
-    arr.unshift(doc.data().title);
+    if(doc.data().uid===user.uid){
+    setData(datas=>[...datas,doc.data()])}
   });
-  
-  
-  setData(arr)
+  //setData(arr)
   console.log(data)
-  // const filteredQuery= querySnapshot.doc.filter((doc)=>{
-  //   return (doc.data().uid===user.uid)
-  // })
-  //   setQuery(filteredQuery)
-    
-  
+
 }
 
   const SignOut=()=>{
@@ -117,20 +110,14 @@ const addData=async()=>{
       <SignOut />
       <Form ondataHandler={dataHandler} addData={addData}/>
       <Display songtitle={title} artist={artist} album={album} cover={cover} image={image} audio={audio}/>
-       {/* <Card songtitle={title} artist={artist} audio={audio}/>  */}
-
-
-      {/* {query.map((q)=>{
-        return(<div>{q}</div>)
-      })} */}
+       
       <div>
         {data.map((i)=>{
-        return(<div>{i}</div>)})}
+        return(<div className="my-10 w-3/12 h-24 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 flex justify-center items-center rounded-sm border border-[#ff9a59] mx-auto font-['Poppins']">
+          <h1 className="text-2xl text-[#ff9a59] font-bold mb-1 tracking-wider">{i.title}</h1>
+          </div>)})}
       </div>
-      
-      
-      {/* <div className='bg-yellow-200'>{data}</div> */}
-
+  
       </div> :
 
       <div className='flex justify-center items-center h-screen'> <button onClick={signInWithGoogle} className='text-4xl text-gray-800 border border-gray-800 px-6 py-3 rounded-md'>Sign In With Google</button> </div>
