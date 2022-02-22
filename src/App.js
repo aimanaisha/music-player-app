@@ -74,17 +74,23 @@ function App() {
     
 const addData=async()=>{
 
-  
+if(title!=='Song Title'){
   try {
      await addDoc(collection(db, 'users'), {
       uid:user.uid,
       title: title,
       artist: artist,
       album: album,
+      cover: cover,
     });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+  alert('Song Added')
+}else{
+  alert('Empty Field')
+} 
+  
 
   const querySnapshot = await getDocs(collection(db, "users"));
   
@@ -92,7 +98,6 @@ const addData=async()=>{
     if(doc.data().uid===user.uid){
     setData(datas=>[...datas,doc.data()])}
   });
-  //setData(arr)
   console.log(data)
 
 }
@@ -113,8 +118,13 @@ const addData=async()=>{
        
       <div>
         {data.map((i)=>{
-        return(<div className="my-10 w-3/12 h-24 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 flex justify-center items-center rounded-sm border border-[#ff9a59] mx-auto font-['Poppins']">
-          <h1 className="text-2xl text-[#ff9a59] font-bold mb-1 tracking-wider">{i.title}</h1>
+        return(<div className="my-10 w-3/12 h-24 bg-gray-800 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-sm border border-[#ff9a59] items-center flex mx-auto font-['Poppins']">
+          <img src={i.cover} alt="" className="rounded-sm h-24 border w-24 border border-[#ff9a59]"/>
+          <div className="flex flex-col ml-6">
+            <h1 className="text-2xl text-[#ff9a59] font-bold mb-1 tracking-wider">{i.title}</h1>
+            <h2 className="text-xl text-[#ff9a59] font-light tracking-wider">{i.artist}</h2>
+          </div>
+          
           </div>)})}
       </div>
   
