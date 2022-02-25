@@ -9,18 +9,22 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection,addDoc,getDocs} from "firebase/firestore"; 
+
+
+
+
  
 function App() {
  
   const firebaseConfig = {
-    apiKey: "AIzaSyBAZa6vZaAsVT4CCaqGwpHkKajIHSL9Igs",
-    authDomain: "music-player-ee74b.firebaseapp.com",
-    databaseURL: "https://music-player-ee74b-default-rtdb.firebaseio.com",
-    projectId: "music-player-ee74b",
-    storageBucket: "music-player-ee74b.appspot.com",
-    messagingSenderId: "679306818706",
-    appId: "1:679306818706:web:dabc50d3447ee1065fe24b",
-    measurementId: "G-2K56Z10BQ4"
+    apiKey: process.env.REACT_APP_FIREBASE_KEY ,
+    authDomain: process.env.REACT_AUTH_DOMAIN ,
+    databaseURL: process.env.REACT_APP_DATABASE_URL,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingKey : process.env.REACT_APP_MESSAGING_KEY,
+    appId: process.env.REACT_APP_API_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID 
   };
  
   const app = initializeApp(firebaseConfig);
