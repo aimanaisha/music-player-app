@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import Form from './Form' 
@@ -32,15 +32,17 @@ function App() {
     signInWithPopup(auth, provider);
   }
   const [user] = useAuthState(auth);
- 
-  const [cover, setCover]=useState("/music.jpg")
-  const [audio, setAudio]=useState('')
-  const [title, setTitle]=useState('Song Title')
-  const [album, setAlbum]=useState('')
-  const [artist, setArtist]=useState('')
-  const [image, setImage]=useState('')
   const [data, setData]=useState([])
   const [userFav, setUserFav] = useState([]);
+
+  const[songData, setSongData]=useState({
+    cover:'/music.jpg',
+    audio:'',
+    title:'Song Title',
+    album:'',
+    artist:'',
+    image:'',
+  })
  
   const dataHandler=(query)=>{             
     const options = {
@@ -53,33 +55,37 @@ function App() {
     } } 
     axios.request(options)
     .then((response)=> {      
-      setCover(response.data.data[0].album.cover_big)
-      setAudio(response.data.data[0].preview)
-      setTitle(response.data.data[0].title)
-      setArtist(response.data.data[0].artist.name)
-      setImage(response.data.data[0].artist.picture_medium)
-      setAlbum("Album: "+response.data.data[0].album.title) 
+      setSongData({
+        cover: response.data.data[0].album.cover_big,
+        audio: response.data.data[0].preview,
+        title: response.data.data[0].title,
+        album: "Album: "+response.data.data[0].album.title,
+        artist: response.data.data[0].artist.name,
+        image: response.data.data[0].artist.picture_medium,
+      })
     })
     .catch((error)=> {
 	    console.error(error);
-      setCover("/music.jpg")
-      setAudio('')
-      setTitle('')
-      setArtist('')
-      setImage('')
-      setAlbum('')
+      setSongData({
+        cover:'/music.jpg',
+        audio:'',
+        title:'Song Title',
+        album:'',
+        artist:'',
+        image:'',
+      })
     });    
   }  
  
 const addData=async()=>{ 
-  if(artist!=='' ){
+  if(songData.artist!=='' ){
     try {
        await addDoc(collection(db, 'users'), {
         uid:user.uid,
-        title: title,
-        artist: artist,
-        album: album,
-        cover: cover,
+        title: songData.title,
+        artist: songData.artist,
+        album: songData.album,
+        cover: songData.cover,
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -116,10 +122,8 @@ console.log(userFav)
     <div className="body1 h-full pb-14">
       <SignOut />
       <Form ondataHandler={dataHandler} addData={addData}/>
-      <Display songtitle={title} artist={artist} album={album} cover={cover} image={image} audio={audio}/>
- 
-      <div>
-          
+      <Display songtitle={songData.title} artist={songData.artist} album={songData.album} cover={songData.cover} image={songData.image} audio={songData.audio}/> 
+      <div>          
          {userFav.map((i) => {return(
             <>
             {i.title === 'Song Title' ? (null) : ( <div className="my-10 w-3/12 h-24 bg-gray-800 backdrop-filter backdrop-blur-sm bg-opacity-30 rounded-sm border border-[#ff9a59] items-center flex mx-auto font-['Poppins']">
@@ -130,15 +134,11 @@ console.log(userFav)
             </div>
           </div>)} 
             </>
-          )})}
- 
-      </div>
- 
-      </div> :
- 
+          )})} 
+      </div> 
+      </div> : 
       <div className='flex justify-center items-center h-screen'> <button onClick={signInWithGoogle} className='text-4xl text-gray-800 border border-gray-800 px-6 py-3 rounded-md'>Sign In With Google</button> </div>
-      }
- 
+      } 
     </div>
   );
 }

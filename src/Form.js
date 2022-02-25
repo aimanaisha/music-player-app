@@ -30,8 +30,8 @@ const Form =(props)=>{
  
                 </div>
  
-                <button onClick={() => {props.addData()}} type="button" className="rounded-md px-3 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#6cbfe1] transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9 text-[#6cbfe1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button onClick={() => {props.addData()}} type="button" className="hover:border-gray-200  rounded-md px-3 bg-gray-800  backdrop-filter backdrop-blur-sm bg-opacity-30 border border-[#6cbfe1] transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9 text-[#6cbfe1] hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                     </svg>
                 </button>
